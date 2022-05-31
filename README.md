@@ -1,2 +1,2 @@
 # FrogToDuck
-it's all new with tags
+A bit-sized encryptor (Frog) and decryptor (Duck) using Python!
