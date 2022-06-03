@@ -1,5 +1,5 @@
 {
-  "name": "frog-to-duck",
+  "name": "frog_to_duck",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "bootstrap": "^5.2.0-beta1",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.2",
+    "flutter": "^0.0.5",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0"

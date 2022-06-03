@@ -1,0 +1,10 @@
+.menu {
+    background-color: white;
+    display: block;
+    height: 100vh;
+}
+
+.menu:first-child {
+    padding-top: 5vh;
+    padding-bottom: 5vh
+}
