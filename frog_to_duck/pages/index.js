@@ -107,25 +107,26 @@ const buttonTheme = createTheme({
 export default function Home() {
 
   // States
-  const [bgColor, setBgColor] = React.useState(frogBg);
+  const [bgColor, setBgColor] = React.useState(frogBg)
   const [translation, setTranslation] = React.useState('B2T')
-  var [value, setValue] = React.useState("")
-  var [t, setTranslate] = React.useState("")
+  var   [t, setTranslate] = React.useState("")
 
   // inner functions
   const handleChange = e => {
     setTranslation(e.target.value)
+    // console.log(translation)
   }
 
-  const handleInput = e => {
-    setValue(e.target.value)
-  }
+  React.useEffect(() => {
+    setTranslate(translate(document.getElementById("outlined-multiline-input").value))
+  },[translation])
 
   const handleTranslate = (value) => {
     setTranslate(translate(value))
   }
 
   function translate(textInput) {
+
     var returnOutput
     switch(translation) {
       case "B2T":
@@ -134,6 +135,8 @@ export default function Home() {
       default:
         returnOutput = noChange(textInput)       
     }
+    console.log(returnOutput)
+
     return returnOutput
   }
 
