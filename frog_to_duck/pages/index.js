@@ -14,20 +14,41 @@ import Image from 'next/image'
 
 
 
-// ASCII to Text Helper
-function a2tf(asciiInput) {
+// Char by char ASCII to Text Helper
+function a2th(asciiInput) {
   return String.fromCharCode(asciiInput);
 }
 
-
-
-
-
-// Text to ASCII Helper
-function t2af(textInput) {
+// Char by char Text to ASCII Helper
+function t2ah(textInput) {
   return textInput.charCodeAt();
 }
 
+
+
+// ASCII to Text
+function a2tf(asciiInput) {
+  asciiInput = asciiInput.split(" ")
+  var returnText = "";
+  for (var i = 0; i < asciiInput.length; i++) {
+    returnText = returnText + a2th(asciiInput[i])
+  }
+  return returnText
+}
+
+
+
+// Text to ASCII
+function t2af(textInput) {
+  textInput = textInput.split("")
+  var returnText = "";
+  for (var i = 0; i < textInput.length; i++) {
+    var bina = parseInt(t2ah(textInput[i])).toString()
+    returnText = returnText + bina + " ";
+  }
+  returnText = returnText.slice(0,-1)
+  return returnText;
+}
 
 
 
@@ -38,7 +59,7 @@ function b2tf(binaryInput) {
   var returnText = "";
   for (var i = 0; i < binaryInput.length; i++) {
     var deci = parseInt(binaryInput[i], 2)
-    returnText = returnText + a2tf(deci)
+    returnText = returnText + a2th(deci)
   }
   return returnText
 }
@@ -52,9 +73,10 @@ function t2bf(textInput) {
   textInput = textInput.split("")
   var returnText = "";
   for (var i = 0; i < textInput.length; i++) {
-    var bina = parseInt(t2af(textInput[i])).toString(2).padStart(8, "0")
+    var bina = parseInt(t2ah(textInput[i])).toString(2).padStart(8, "0")
     returnText = returnText + bina + " ";
   }
+  returnText = returnText.slice(0,-1)
   return returnText;
 }
 
@@ -182,6 +204,12 @@ export default function Home() {
         break
       case "T2B":
         returnOutput = t2bf(textInput)
+        break
+      case "A2T":
+        returnOutput = a2tf(textInput)
+        break
+      case "T2A":
+        returnOutput = t2af(textInput)
         break
       default:
         returnOutput = noChange(textInput)       
