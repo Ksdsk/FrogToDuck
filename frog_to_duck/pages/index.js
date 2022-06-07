@@ -19,10 +19,18 @@ function a2tf(asciiInput) {
   return String.fromCharCode(asciiInput);
 }
 
+
+
+
+
 // Text to ASCII Helper
 function t2af(textInput) {
   return textInput.charCodeAt();
 }
+
+
+
+
 
 // Binary to Text
 function b2tf(binaryInput) {
@@ -35,10 +43,33 @@ function b2tf(binaryInput) {
   return returnText
 }
 
+
+
+
+
+// Text to Binary
+function t2bf(textInput) {
+  textInput = textInput.split("")
+  var returnText = "";
+  for (var i = 0; i < textInput.length; i++) {
+    var bina = parseInt(t2af(textInput[i])).toString(2).padStart(8, "0")
+    returnText = returnText + bina + " ";
+  }
+  return returnText;
+}
+
+
+
+
+
 // Nochange function for default
 function noChange(textInput) {
   return textInput
 }
+
+
+
+
 
 const translations = [
   {
@@ -75,6 +106,10 @@ const translations = [
   }
 ]
 
+
+
+
+
 const frogBg = createTheme({
   palette: {
     background: {
@@ -104,6 +139,10 @@ const buttonTheme = createTheme({
   }
 })
 
+
+
+
+
 export default function Home() {
 
   // States
@@ -111,26 +150,38 @@ export default function Home() {
   const [translation, setTranslation] = React.useState('B2T')
   var   [t, setTranslate] = React.useState("")
 
+
+
+
   // inner functions
   const handleChange = e => {
     setTranslation(e.target.value)
     // console.log(translation)
   }
 
+  // Async await
   React.useEffect(() => {
     setTranslate(translate(document.getElementById("outlined-multiline-input").value))
   },[translation])
 
+  // statechange
   const handleTranslate = (value) => {
     setTranslate(translate(value))
   }
 
+
+
+
+  // Add the codes to the list to test
   function translate(textInput) {
 
     var returnOutput
     switch(translation) {
       case "B2T":
         returnOutput = b2tf(textInput)
+        break
+      case "T2B":
+        returnOutput = t2bf(textInput)
         break
       default:
         returnOutput = noChange(textInput)       
@@ -141,7 +192,7 @@ export default function Home() {
   }
 
 
-
+  // DO NOT TOUCH
   return (
     <ThemeProvider theme={bgColor}>
       <CssBaseline/>
