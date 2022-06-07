@@ -10,14 +10,21 @@ import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import Image from 'next/image'
 
+
+
+
+
+// ASCII to Text Helper
 function a2tf(asciiInput) {
   return String.fromCharCode(asciiInput);
 }
 
+// Text to ASCII Helper
 function t2af(textInput) {
   return textInput.charCodeAt();
 }
 
+// Binary to Text
 function b2tf(binaryInput) {
   binaryInput = binaryInput.split(" ")
   var returnText = "";
@@ -26,6 +33,11 @@ function b2tf(binaryInput) {
     returnText = returnText + a2tf(deci)
   }
   return returnText
+}
+
+// Nochange function for default
+function noChange(textInput) {
+  return textInput
 }
 
 const translations = [
@@ -98,8 +110,7 @@ export default function Home() {
   const [bgColor, setBgColor] = React.useState(frogBg);
   const [translation, setTranslation] = React.useState('B2T')
   var [value, setValue] = React.useState("")
-  var [b2t, setb2t] = React.useState("")
-
+  var [t, setTranslate] = React.useState("")
 
   // inner functions
   const handleChange = e => {
@@ -110,10 +121,21 @@ export default function Home() {
     setValue(e.target.value)
   }
 
-  const handleb2t = (value) => {
-    setb2t(b2tf(value))
+  const handleTranslate = (value) => {
+    setTranslate(translate(value))
   }
 
+  function translate(textInput) {
+    var returnOutput
+    switch(translation) {
+      case "B2T":
+        returnOutput = b2tf(textInput)
+        break
+      default:
+        returnOutput = noChange(textInput)       
+    }
+    return returnOutput
+  }
 
 
 
@@ -152,7 +174,7 @@ export default function Home() {
                         // helperText="Please choose one of the methods"  
                       >
                         {translations.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
+                          <MenuItem id="translation-option" className={option.value} key={option.value} value={option.value}>
                             {option.label}
                           </MenuItem>
                         ))}
@@ -190,7 +212,7 @@ export default function Home() {
                       multiline
                       fullWidth
                       rows={8}
-                      onChange={e => handleb2t(e.target.value)}  
+                      onChange={e => handleTranslate(e.target.value)}  
                     >
                     </TextField>
                   </div>
@@ -210,8 +232,9 @@ export default function Home() {
                       multiline
                       disabled
                       rows={8}
-                      value={b2t}
+                      value={t}
                     >
+                      {t}
                     </TextField>
                   </div>
                 </Box>
