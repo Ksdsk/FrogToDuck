@@ -2,9 +2,10 @@
     background-color: white;
     display: block;
     height: 100vh;
-}
-
-.menu:first-child {
     padding-top: 5vh;
     padding-bottom: 5vh
+}
+
+.frogbg {
+    background-color: #e4f0e2;
 }

@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 import * as React from 'react'
 import Button from '@mui/material/Button'
 import { CssBaseline, requirePropFactory } from '@mui/material'
@@ -9,9 +8,51 @@ import { Box } from '@mui/system'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import Image from 'next/image'
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 
 
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
+}));
 
+const BootstrapDialogTitle = (props) => {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+};
+
+BootstrapDialogTitle.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+};
 
 
 // Char by char ASCII to Text Helper
@@ -82,6 +123,32 @@ function t2bf(textInput) {
 
 
 
+// Hex to Text
+function h2tf(hexInput) {
+  hexInput = hexInput.split(" ")
+  var returnText = "";
+  for (var i = 0; i < hexInput.length; i++) {
+    var deci = parseInt(hexInput[i], 16)
+    returnText = returnText + a2th(deci)
+  }
+  return returnText
+}
+
+
+
+
+
+// Text to Hex
+function t2hf(textInput) {
+  textInput = textInput.split("")
+  var returnText = "";
+  for (var i = 0; i < textInput.length; i++) {
+    var bina = parseInt(t2ah(textInput[i])).toString(16)
+    returnText = returnText + bina + " ";
+  }
+  returnText = returnText.slice(0,-1)
+  return returnText;
+}
 
 
 // Nochange function for default
@@ -140,13 +207,6 @@ const frogBg = createTheme({
   }
 })
 
-const duckBg = createTheme({
-  palette: {
-    background: {
-      default: "#eef0e2"
-    }
-  }
-})
 
 const buttonTheme = createTheme({
   palette: {
@@ -171,8 +231,17 @@ export default function Home() {
   const [bgColor, setBgColor] = React.useState(frogBg)
   const [translation, setTranslation] = React.useState('B2T')
   var   [t, setTranslate] = React.useState("")
+  const [open, setOpen] = React.useState(false);
 
 
+
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
 
   // inner functions
@@ -211,6 +280,12 @@ export default function Home() {
       case "T2A":
         returnOutput = t2af(textInput)
         break
+      case "H2T":
+        returnOutput = h2tf(textInput)
+        break
+      case "T2H":
+        returnOutput = t2hf(textInput)
+        break
       default:
         returnOutput = noChange(textInput)       
     }
@@ -233,14 +308,11 @@ export default function Home() {
 
       <main>
         <Grid container>
-
-
-
           {/* SIDE BAR MENU */}
           <Grid item xs={3}>
             <div class="menu">
-              <Box sx={{display: 'flex', flexDirection: "column" , alignContent: "space-between"}}>
-                <Box sx={{display: 'flex', justifyContent: 'center'}}>
+              <Box sx={{display: 'flex', flexWrap: 'wrap', justifyContent:"center", alignContent: 'space-between', height: "100%"}}>
+                <Box sx={{display: 'flex', justifyContent: 'center', height: "auto"}}>
                   <Box component="form" 
                     sx={{'& .MuiTextField-root': {mt: 0, width: '23vw'}}}
                     noValidate
@@ -269,9 +341,30 @@ export default function Home() {
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'center'}}>
                   <Box sx={{'& .MuiButton-root': {mt: 0, width: '23vw'}}}>
-                    <Button variant="contained" disableElevation>
+                    <Button variant="contained" disableElevation onClick={handleClickOpen}>
                       Instructions
                     </Button>
+                    <BootstrapDialog
+                      onClose={handleClose}
+                      aria-labelledby="customized-dialog-title"
+                      open={open}
+                    >
+                      <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+                        Instructions (Click anywhere outside the dialog to leave)
+                      </BootstrapDialogTitle>
+                      <DialogContent dividers>
+                        <Typography gutterBottom>
+                          <b>Translation options: </b>Please see the dropdown above and choose the translation.
+                        </Typography>
+                        <Typography gutterBottom>
+                          <b>Input:</b> Please paste the encrypted string in "Input your Frog". The translator should run automatically.
+                        </Typography>
+                        <Typography gutterBottom>
+                          <b>Output: </b>
+                          Please see the decryped string cured from encryption. 
+                        </Typography>
+                      </DialogContent>
+                    </BootstrapDialog>
                   </Box>
                 </Box>
               </Box>
@@ -280,48 +373,51 @@ export default function Home() {
 
           {/* I/O STUFF */}
           <Grid item xs={9}>
-            <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'start'}}>
-              <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <Box component="form"
-                  sx={{'& .MuiTextField-root': {mt: 3, width: '70vw'}}}
-                  noValidate
-                  autoComplete="off" 
-                >
-                  <div>
-                    <TextField
-                      id="outlined-multiline-input"
-                      label="Input your Frog"
-                      multiline
-                      fullWidth
-                      rows={8}
-                      onChange={e => handleTranslate(e.target.value)}  
-                    >
-                    </TextField>
-                  </div>
+            <div class="menu frogbg">
+              <Box sx={{display: 'flex', flexWrap: 'wrap', justifyContent:"center", alignContent: 'space-between', height: "100%"}}>
+                <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                  <Box component="form"
+                    sx={{'& .MuiTextField-root': { width: '70vw'}}}
+                    noValidate
+                    autoComplete="off" 
+                  >
+                    <div>
+                      <TextField
+                        id="outlined-multiline-input"
+                        label="Input your Frog"
+                        multiline
+                        fullWidth
+                        rows={8}
+                        onChange={e => handleTranslate(e.target.value)}  
+                      >
+                      </TextField>
+                    </div>
+                  </Box>
+                </Box>
+                
+                <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                  <Box component="form"
+                    sx={{'& .MuiTextField-root': {width: '70vw'}}} 
+                    noValidate
+                    autoComplete="off" 
+                  >
+                    <div>
+                      <TextField
+                        id="outlined-multiline-output"
+                        label="Out comes your Duck"
+                        multiline
+                        disabled
+                        rows={8}
+                        value={t}
+                      >
+                        {t}
+                      </TextField>
+                    </div>
+                  </Box>
                 </Box>
               </Box>
-              
-              <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <Box component="form"
-                  sx={{'& .MuiTextField-root': {mt: 3, width: '70vw'}}} 
-                  noValidate
-                  autoComplete="off" 
-                >
-                  <div>
-                    <TextField
-                      id="outlined-multiline-output"
-                      label="Out comes your Duck"
-                      multiline
-                      disabled
-                      rows={8}
-                      value={t}
-                    >
-                      {t}
-                    </TextField>
-                  </div>
-                </Box>
-              </Box>
-            </Box>
+            </div>
+            
           </Grid>
         </Grid>
       </main>
